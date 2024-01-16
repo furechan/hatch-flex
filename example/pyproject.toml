@@ -12,7 +12,6 @@ description = "Example for Hatch Flex Plugin"
 standard-dependencies = ["click"]
 
 [tool.hatch.build]
-targets.wheel.sources = ["src"]
-dev-mode-dirs = ["src"]
-include = ["src/*.py"]
+dev-mode-dirs = ["."]
+include = ["*.py"]
 

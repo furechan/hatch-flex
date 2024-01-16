@@ -1,4 +1,4 @@
-from pprint import pprint
+""" Hatch Flex Plugin """
 
 from hatchling.plugin import hookimpl
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface
@@ -7,24 +7,6 @@ from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 @hookimpl
 def hatch_register_build_hook():
     return FlexBuildHook
-
-
-def dump_vars(**kwargs):
-    for k, v in kwargs.items():
-        print(k)
-        pprint(v)
-
-
-def dump_obj(obj, attribs=None):
-    if isinstance(attribs, str):
-        attribs = attribs.split()
-    elif attribs is None:
-        attribs = dir(obj)
-
-    for attrib in attribs:
-        value = getattr(obj, attrib, None)
-        print(attrib)
-        pprint(value)
 
 
 class FlexBuildHook(BuildHookInterface):
@@ -45,10 +27,19 @@ class FlexBuildHook(BuildHookInterface):
     PLUGIN_NAME = "flex"
 
     def initialize(self, version, build_data):
-        dependencies = build_data.get("dependencies", [])
-        flex_deps = self.config.get(f"{version}-dependencies", [])
+        key_name = f"{version}-dependencies"
+        full_key = f"tool.hatch.build.hooks.{self.PLUGIN_NAME}.{key_name}"
+
+        flex_deps = self.config.get(key_name, [])
+
+        if not isinstance(flex_deps, list):
+            raise TypeError(f"{full_key} must be an array")
+
+        if not all(isinstance(s, str) for s in flex_deps):
+            raise TypeError(f"Dependencies in {full_key} must be strings")
 
         if flex_deps:
-            message = f"Adding flex dependencies {flex_deps!r}"
+            dependencies = build_data.get("dependencies", [])
+            message = f"Adding {key_name} {flex_deps!r}"
             self.app.display_info(message)
             dependencies.extend(flex_deps)
