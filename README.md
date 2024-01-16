@@ -14,7 +14,9 @@ when building wheels.
 
 You can specify `editable-dependencies` for editable installs
 and `standard-dependencies` for other builds in the
-`[tool.hatch.build.hook.flex]` section of the `pyproject.toml`. 
+`[tool.hatch.build.hook.flex]` section of the `pyproject.toml`.
+These dependencies, depending on the build type, will be added
+to the dependencies already declared in the project section.
 
 
 ```

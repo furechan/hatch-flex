@@ -26,3 +26,6 @@ targets.wheel.sources = ["src"]
 dev-mode-dirs = ["src"]
 include = ["src/*.py"]
 
+[tool.pydev]
+allow-publish = true
+
